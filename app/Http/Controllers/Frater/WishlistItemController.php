@@ -28,7 +28,7 @@ class WishlistItemController extends Controller
 
     public function destroy(WishlistItem $wishlistItem): RedirectResponse
     {
-        abort_unless($wishlistItem->candidate_id === Auth::guard('frater')->id(), 403);
+        abort_unless((int) $wishlistItem->candidate_id === (int) Auth::guard('frater')->id(), 403);
 
         $wishlistItem->delete();
 

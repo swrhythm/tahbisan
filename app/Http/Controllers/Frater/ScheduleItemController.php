@@ -22,7 +22,7 @@ class ScheduleItemController extends Controller
 
     public function update(Request $request, ScheduleItem $scheduleItem): RedirectResponse
     {
-        abort_unless($scheduleItem->candidate_id === Auth::guard('frater')->id(), 403);
+        abort_unless((int) $scheduleItem->candidate_id === (int) Auth::guard('frater')->id(), 403);
 
         $scheduleItem->update($this->validated($request));
 
@@ -32,7 +32,7 @@ class ScheduleItemController extends Controller
 
     public function destroy(ScheduleItem $scheduleItem): RedirectResponse
     {
-        abort_unless($scheduleItem->candidate_id === Auth::guard('frater')->id(), 403);
+        abort_unless((int) $scheduleItem->candidate_id === (int) Auth::guard('frater')->id(), 403);
 
         $scheduleItem->delete();
 

@@ -27,6 +27,14 @@ cd "$BUILD_DIR"
 echo "==> Installing PHP dependencies (production only)"
 composer install --no-dev --optimize-autoloader --no-interaction --quiet
 
+echo "==> Trimming non-runtime files from vendor/ (git-source installs pull full repos)"
+find vendor -depth -type d \( \
+    -name '.git' -o -iname 'tests' -o -iname 'test' -o -iname 'Tests' \
+    -o -iname 'docs' -o -iname '.github' -o -iname 'examples' -o -iname 'tools' \
+    -o -iname 'benchmarks' -o -iname '.phpstan' -o -iname '.phpunit.cache' \
+\) -prune -exec rm -rf {} +
+composer dump-autoload --optimize --no-dev --no-interaction --quiet
+
 echo "==> Installing and building front-end assets"
 npm install --no-audit --no-fund --silent
 npm run build --silent
@@ -42,8 +50,10 @@ touch database/database.sqlite
 php artisan migrate --force --no-interaction
 TAHBISAN_ADMIN_PASSWORD="$ADMIN_PASSWORD" php artisan db:seed --class=AdminSeeder --force --no-interaction
 
-echo "==> Setting storage/bootstrap-cache write permissions"
+echo "==> Setting storage/bootstrap-cache/database write permissions"
 chmod -R 775 storage bootstrap/cache
+chmod 775 database
+chmod 664 database/database.sqlite
 
 echo "==> Zipping release"
 rm -f "$DIST_ZIP"

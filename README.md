@@ -46,12 +46,28 @@ Demo logins after seeding: Admin password `admin123`; candidate
 `Yohanes Adi Nugroho`, password `diakon123` (pick the name from the login
 dropdown).
 
+`public/build/` (the compiled CSS/JS) is committed to this repo, not
+gitignored — deliberately, so a plain `git pull`/zip extract never requires
+running Node on a hosting account (see below for why). **If you change
+anything under `resources/`, run `npm run build` and commit the resulting
+`public/build/` changes** — otherwise your edits won't show up anywhere
+except your own dev server.
+
 ## Deploying to shared hosting
 
-The goal is: **upload one zip, extract it, done.** `vendor/` and the built
-front-end assets (`public/build/`) are already inside the release zip, so
-the hosting account needs neither Composer nor Node — only PHP with the
-`pdo_sqlite` extension (standard on virtually every PHP 8.1+ shared host).
+The goal is: **upload one zip (or `git pull`), extract it, done.** `public/build/`
+(the compiled CSS/JS) is committed straight into the repo, and the release
+zip additionally bundles `vendor/`. **Do not run `npm install`/`npm run build`
+on the hosting account** — budget shared hosting frequently enforces very
+low process/thread quotas (CloudLinux LVE `nproc` limits and similar), and
+Vite 8's Rolldown bundler plus Tailwind's CSS engine both spawn OS threads
+to build, which reliably fails on such accounts (`EAGAIN` / thread-pool
+errors) even though the exact same build succeeds instantly on an
+unconstrained machine. Build on your own machine (or skip building
+altogether — `public/build/` is already up to date in git) and only ever
+ship the *compiled* output to the server. All you need on the server is PHP
+with the `pdo_sqlite` extension (standard on virtually every PHP 8.1+
+shared host).
 
 ### 1. Build the release zip
 

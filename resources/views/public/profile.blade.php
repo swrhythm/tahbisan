@@ -24,27 +24,28 @@
             </div>
 
             @if ($tab === 'informasi')
-                @if ($candidate->scheduleItems->isEmpty())
+                @if ($timeline->isEmpty())
                     <div class="py-12 text-center text-sm text-taupe">Jadwal belum tersedia.</div>
                 @else
                     <div>
-                        @foreach ($candidate->scheduleItems as $item)
-                            <div class="flex gap-5 border-b border-chip py-5">
-                                <div class="mt-2 h-2 w-2 flex-shrink-0 rounded-full bg-gold"></div>
-                                <div>
-                                    <div class="text-[15px] font-semibold text-maroon-dark">{{ $item->acara }}</div>
-                                    <div class="mt-1 text-[13px] font-semibold text-maroon">{{ $item->tanggal }} &middot; {{ $item->jam }}</div>
-                                    <div class="mt-0.5 text-sm text-taupe">{{ $item->lokasi }}</div>
-                                    @if ($item->catatan)
-                                        <div class="mt-2 text-[13px] italic text-taupe">{{ $item->catatan }}</div>
-                                    @endif
-                                </div>
-                            </div>
+                        @foreach ($timeline as $item)
+                            <x-timeline-item
+                                :tanggal-label="$item->tanggalLabel()"
+                                :jam="$item->jam"
+                                :acara="$item->acara"
+                                :lokasi="$item->lokasi"
+                                :catatan="$item->catatan"
+                                :is-past="$item->isPast()"
+                            />
                         @endforeach
                     </div>
                 @endif
             @elseif ($tab === 'biography')
-                <div class="whitespace-pre-wrap font-serif text-lg leading-loose text-[#2b241f]">{{ $candidate->biography ?: 'Biography belum tersedia.' }}</div>
+                @if ($candidate->biography)
+                    <div class="prose prose-lg max-w-none font-serif text-[#2b241f] prose-headings:font-serif prose-headings:text-maroon-dark prose-a:text-maroon">{!! $candidate->biography !!}</div>
+                @else
+                    <div class="text-lg text-taupe">Biography belum tersedia.</div>
+                @endif
             @else
                 <div>
                     <div class="mb-6 text-sm text-taupe">Sudah terpenuhi? Cek dulu di sini sebelum memberi, agar tidak dobel.</div>

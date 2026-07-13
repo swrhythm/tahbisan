@@ -43,8 +43,8 @@ class ScheduleItemController extends Controller
     private function validated(Request $request): array
     {
         return $request->validate([
-            'tanggal' => ['required', 'string', 'max:255'],
-            'jam' => ['nullable', 'string', 'max:255'],
+            'tanggal' => ['required', 'date'],
+            'jam' => ['nullable', 'date_format:H:i'],
             'acara' => ['required', 'string', 'max:255'],
             'lokasi' => ['nullable', 'string', 'max:255'],
             'catatan' => ['nullable', 'string'],

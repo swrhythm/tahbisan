@@ -31,8 +31,8 @@
                         @if ($editingItem) @method('PUT') @endif
 
                         <div class="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
-                            <input type="text" name="tanggal" placeholder="Tanggal (mis. 12 Okt 2026)" value="{{ old('tanggal', $editingItem->tanggal ?? '') }}" class="rounded-sm border border-border px-3 py-2.5 text-sm">
-                            <input type="text" name="jam" placeholder="Jam (mis. 09:00 WIB)" value="{{ old('jam', $editingItem->jam ?? '') }}" class="rounded-sm border border-border px-3 py-2.5 text-sm">
+                            <input type="date" name="tanggal" value="{{ old('tanggal', optional($editingItem?->tanggal)->format('Y-m-d')) }}" class="rounded-sm border border-border px-3 py-2.5 text-sm">
+                            <input type="time" name="jam" value="{{ old('jam', $editingItem->jam ?? '') }}" class="rounded-sm border border-border px-3 py-2.5 text-sm">
                         </div>
                         <input type="text" name="acara" placeholder="Nama Acara (mis. Misa Tahbisan)" value="{{ old('acara', $editingItem->acara ?? '') }}" class="mb-3 w-full rounded-sm border border-border px-3 py-2.5 text-sm">
                         <input type="text" name="lokasi" placeholder="Lokasi" value="{{ old('lokasi', $editingItem->lokasi ?? '') }}" class="mb-3 w-full rounded-sm border border-border px-3 py-2.5 text-sm">
@@ -51,27 +51,38 @@
                     </form>
                 </div>
 
-                @foreach ($candidate->scheduleItems as $item)
-                    <div class="flex items-start justify-between gap-4 border-b border-chip py-4">
-                        <div>
-                            <div class="text-sm font-semibold text-maroon-dark">{{ $item->acara }}</div>
-                            <div class="mt-0.5 text-xs font-semibold text-maroon">{{ $item->tanggal }} &middot; {{ $item->jam }}</div>
-                            <div class="mt-0.5 text-[13px] text-taupe">{{ $item->lokasi }}</div>
-                        </div>
-                        <div class="flex flex-shrink-0 gap-2">
-                            <a href="{{ route('frater.dashboard', ['tab' => 'informasi', 'edit' => $item->id]) }}" class="rounded-sm border border-border px-3 py-1.5 text-xs font-semibold text-maroon">Edit</a>
-                            <form method="POST" action="{{ route('frater.informasi.destroy', $item) }}" data-confirm="Hapus jadwal ini?">
-                                @csrf @method('DELETE')
-                                <button type="submit" class="rounded-sm border border-border px-3 py-1.5 text-xs font-semibold text-red">Hapus</button>
-                            </form>
-                        </div>
-                    </div>
-                @endforeach
+                @if ($timeline->isEmpty())
+                    <div class="py-8 text-center text-sm text-taupe">Belum ada jadwal.</div>
+                @else
+                    @foreach ($timeline as $item)
+                        <x-timeline-item
+                            :tanggal-label="$item->tanggalLabel()"
+                            :jam="$item->jam"
+                            :acara="$item->acara"
+                            :lokasi="$item->lokasi"
+                            :catatan="$item->catatan"
+                            :is-past="$item->isPast()"
+                            :badge="$item->source === 'event' ? 'Dari Panitia' : null"
+                        >
+                            @if ($item->source === 'personal')
+                                <x-slot:actions>
+                                    <a href="{{ route('frater.dashboard', ['tab' => 'informasi', 'edit' => $item->model->id]) }}" class="rounded-sm border border-border px-3 py-1.5 text-xs font-semibold text-maroon">Edit</a>
+                                    <form method="POST" action="{{ route('frater.informasi.destroy', $item->model) }}" data-confirm="Hapus jadwal ini?">
+                                        @csrf @method('DELETE')
+                                        <button type="submit" class="rounded-sm border border-border px-3 py-1.5 text-xs font-semibold text-red">Hapus</button>
+                                    </form>
+                                </x-slot:actions>
+                            @endif
+                        </x-timeline-item>
+                    @endforeach
+                @endif
             @elseif ($tab === 'biography')
-                <form method="POST" action="{{ route('frater.biography.update') }}">
+                <form method="POST" action="{{ route('frater.biography.update') }}" data-biography-form>
                     @csrf
-                    <textarea name="biography" placeholder="Ceritakan perjalanan panggilan Anda hingga tahbisan..." rows="12"
-                              class="mb-4 w-full resize-y rounded-md border border-border px-4 py-4 font-serif text-base leading-relaxed">{{ old('biography', $candidate->biography) }}</textarea>
+                    <div class="mb-4 rounded-md border border-border bg-white">
+                        <div id="biography-editor" data-image-upload-url="{{ route('frater.biography.image') }}" class="font-serif text-base leading-relaxed" style="min-height: 260px;">{!! old('biography', $candidate->biography) !!}</div>
+                    </div>
+                    <textarea name="biography" class="hidden"></textarea>
                     <button type="submit" class="rounded-sm bg-maroon px-5.5 py-2.5 text-[13px] font-semibold text-cream">Simpan Biography</button>
                 </form>
             @else

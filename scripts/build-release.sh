@@ -50,10 +50,11 @@ touch database/database.sqlite
 php artisan migrate --force --no-interaction
 TAHBISAN_ADMIN_PASSWORD="$ADMIN_PASSWORD" php artisan db:seed --class=AdminSeeder --force --no-interaction
 
-echo "==> Setting storage/bootstrap-cache/database write permissions"
+echo "==> Setting storage/bootstrap-cache/database/uploads write permissions"
 chmod -R 775 storage bootstrap/cache
 chmod 775 database
 chmod 664 database/database.sqlite
+chmod -R 775 public/uploads
 
 echo "==> Zipping release"
 rm -f "$DIST_ZIP"

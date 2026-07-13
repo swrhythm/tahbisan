@@ -20,24 +20,41 @@ class TahbisanSeeder extends Seeder
             'lokasi' => 'Gereja Katedral, Jakarta',
         ]);
 
+        // Shared schedule, set by the admin — visible to every candidate in this event.
+        $event1->scheduleItems()->create([
+            'tanggal' => '2026-10-12',
+            'jam' => '09:00',
+            'acara' => 'Misa Tahbisan Diakon',
+            'lokasi' => 'Gereja Katedral, Jakarta',
+            'catatan' => 'Mohon hadir 30 menit sebelum misa dimulai.',
+        ]);
+
         $c1 = $event1->candidates()->create([
             'category' => 'diakon',
             'name' => 'Yohanes Adi Nugroho',
             'password' => 'diakon123',
-            'biography' => "Sejak kecil aku dibesarkan dalam keluarga sederhana di Yogyakarta, di mana doa malam bersama keluarga menjadi kebiasaan yang tak pernah putus.\n\nPanggilan ini mulai terasa nyata ketika aku aktif menjadi misdinar di paroki, dan semakin diteguhkan sepanjang masa pendidikan di seminari.\n\nDengan penuh syukur, aku melangkah menuju tahbisan diakon, percaya bahwa inilah jalan yang Tuhan siapkan bagiku.",
+            'biography' => '<p>Sejak kecil aku dibesarkan dalam keluarga sederhana di Yogyakarta, di mana doa malam bersama keluarga menjadi kebiasaan yang tak pernah putus.</p><p>Panggilan ini mulai terasa nyata ketika aku aktif menjadi misdinar di paroki, dan semakin diteguhkan sepanjang masa pendidikan di seminari.</p><p>Dengan penuh syukur, aku melangkah menuju tahbisan diakon, percaya bahwa inilah jalan yang Tuhan siapkan bagiku.</p>',
         ]);
 
+        // Personal schedule, set by the candidate themself — only shown on their own timeline.
         $c1->scheduleItems()->createMany([
             [
-                'tanggal' => '12 Oktober 2026',
-                'jam' => '09.00 WIB',
-                'acara' => 'Misa Tahbisan Diakon',
-                'lokasi' => 'Gereja Katedral, Jakarta',
-                'catatan' => 'Mohon hadir 30 menit sebelum misa dimulai.',
+                'tanggal' => '2026-06-01',
+                'jam' => '08:00',
+                'acara' => 'Retret Pra-Tahbisan',
+                'lokasi' => 'Wisma Retret Girisonta',
+                'catatan' => null,
             ],
             [
-                'tanggal' => '12 Oktober 2026',
-                'jam' => '12.00 WIB',
+                'tanggal' => '2026-10-05',
+                'jam' => '19:00',
+                'acara' => 'Pertemuan Komunitas',
+                'lokasi' => 'Rumah Retret Keuskupan',
+                'catatan' => null,
+            ],
+            [
+                'tanggal' => '2026-10-12',
+                'jam' => '12:00',
                 'acara' => 'Acara Ramah Tamah',
                 'lokasi' => 'Aula Paroki St. Yohanes',
                 'catatan' => null,

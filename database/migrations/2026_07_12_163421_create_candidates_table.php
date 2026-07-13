@@ -17,7 +17,7 @@ return new class extends Migration
             $table->enum('category', ['diakon', 'imam']);
             $table->string('name');
             $table->string('password');
-            $table->text('biography')->nullable();
+            $table->longText('biography')->nullable();
             $table->timestamps();
         });
     }

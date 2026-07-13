@@ -7,8 +7,8 @@ use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-#[Fillable(['candidate_id', 'tanggal', 'jam', 'acara', 'lokasi', 'catatan'])]
-class ScheduleItem extends Model
+#[Fillable(['event_id', 'tanggal', 'jam', 'acara', 'lokasi', 'catatan'])]
+class EventScheduleItem extends Model
 {
     protected function casts(): array
     {
@@ -17,9 +17,9 @@ class ScheduleItem extends Model
         ];
     }
 
-    public function candidate(): BelongsTo
+    public function event(): BelongsTo
     {
-        return $this->belongsTo(Candidate::class);
+        return $this->belongsTo(Event::class);
     }
 
     public function tanggalLabel(): string

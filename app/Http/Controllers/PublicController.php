@@ -27,7 +27,7 @@ class PublicController extends Controller
 
     public function profile(Request $request, Candidate $candidate): View
     {
-        $candidate->load(['event', 'scheduleItems', 'wishlistItems.claims']);
+        $candidate->load(['event.scheduleItems', 'scheduleItems', 'wishlistItems.claims']);
 
         $tab = in_array($request->query('tab'), ['informasi', 'biography', 'wishlist'], true)
             ? $request->query('tab')
@@ -40,6 +40,7 @@ class PublicController extends Controller
 
         return view('public.profile', [
             'candidate' => $candidate,
+            'timeline' => $candidate->timeline(),
             'tab' => $tab,
             'giveItem' => $giveItem,
         ]);

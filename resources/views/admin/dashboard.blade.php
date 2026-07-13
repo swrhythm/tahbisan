@@ -47,6 +47,7 @@
                                     <div class="mt-0.5 text-[13px] text-taupe">{{ $event->jam }} &middot; {{ $event->lokasi }}</div>
                                 </div>
                                 <div class="flex gap-2">
+                                    <a href="{{ route('admin.dashboard', ['tab' => 'manage', 'schedule_event' => $event->id]) }}" class="rounded-sm border border-maroon px-3.5 py-2 text-xs font-semibold text-maroon">Jadwal Bersama</a>
                                     <a href="{{ route('admin.dashboard', ['tab' => 'manage', 'form_event' => $event->id]) }}" class="rounded-sm bg-maroon px-3.5 py-2 text-xs font-semibold text-cream">Tambah Calon</a>
                                     <form method="POST" action="{{ route('admin.events.destroy', $event) }}" data-confirm="Hapus event ini beserta seluruh calon di dalamnya?">
                                         @csrf @method('DELETE')
@@ -54,6 +55,57 @@
                                     </form>
                                 </div>
                             </div>
+
+                            @if ($scheduleEventId === $event->id)
+                                <div class="mt-4 border-t border-chip pt-4">
+                                    <div class="mb-3 text-[13px] font-bold text-maroon-dark">Jadwal Bersama &mdash; berlaku untuk semua calon di event ini</div>
+
+                                    @forelse ($event->scheduleItems as $item)
+                                        <x-timeline-item
+                                            :tanggal-label="$item->tanggalLabel()"
+                                            :jam="$item->jam"
+                                            :acara="$item->acara"
+                                            :lokasi="$item->lokasi"
+                                            :catatan="$item->catatan"
+                                            :is-past="$item->isPast()"
+                                        >
+                                            <x-slot:actions>
+                                                <form method="POST" action="{{ route('admin.schedule.destroy', $item) }}" data-confirm="Hapus jadwal bersama ini?">
+                                                    @csrf @method('DELETE')
+                                                    <button type="submit" class="rounded-sm border border-border px-3 py-1.5 text-xs font-semibold text-red">Hapus</button>
+                                                </form>
+                                            </x-slot:actions>
+                                        </x-timeline-item>
+                                    @empty
+                                        <div class="text-[13px] italic text-taupe">Belum ada jadwal bersama.</div>
+                                    @endforelse
+
+                                    <form method="POST" action="{{ route('admin.schedule.store') }}" class="mt-4 grid grid-cols-1 gap-2.5 sm:grid-cols-[140px_110px_1fr_1fr_auto] sm:items-end">
+                                        @csrf
+                                        <input type="hidden" name="event_id" value="{{ $event->id }}">
+                                        <div>
+                                            <div class="mb-1 text-xs font-semibold text-maroon-dark">Tanggal</div>
+                                            <input type="date" name="tanggal" class="w-full rounded-sm border border-border px-2.5 py-2 text-[13px]">
+                                        </div>
+                                        <div>
+                                            <div class="mb-1 text-xs font-semibold text-maroon-dark">Jam</div>
+                                            <input type="time" name="jam" class="w-full rounded-sm border border-border px-2.5 py-2 text-[13px]">
+                                        </div>
+                                        <div>
+                                            <div class="mb-1 text-xs font-semibold text-maroon-dark">Nama Acara</div>
+                                            <input type="text" name="acara" placeholder="mis. Misa Tahbisan" class="w-full rounded-sm border border-border px-2.5 py-2 text-[13px]">
+                                        </div>
+                                        <div>
+                                            <div class="mb-1 text-xs font-semibold text-maroon-dark">Lokasi</div>
+                                            <input type="text" name="lokasi" class="w-full rounded-sm border border-border px-2.5 py-2 text-[13px]">
+                                        </div>
+                                        <button type="submit" class="rounded-sm bg-maroon px-4 py-2.5 text-xs font-semibold text-cream">Tambah</button>
+                                    </form>
+                                    @if ($errors->any())
+                                        <div class="mt-2 text-xs text-red">{{ $errors->first() }}</div>
+                                    @endif
+                                </div>
+                            @endif
 
                             @if ($formEventId === $event->id)
                                 <div class="mt-4 grid grid-cols-1 gap-2.5 border-t border-chip pt-4 sm:grid-cols-[1fr_1fr_1fr_auto] sm:items-end">

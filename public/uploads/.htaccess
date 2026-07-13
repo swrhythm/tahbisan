@@ -1,0 +1,11 @@
+# Uploaded files are never executed as scripts, even if someone manages
+# to smuggle a disguised file past the upload validation.
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<FilesMatch "\.(php|phtml|php\d|pht|phar|cgi|pl)$">
+    Require all denied
+</FilesMatch>

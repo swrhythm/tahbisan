@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Support\IndonesianDate;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -21,14 +22,14 @@ class Event extends Model
         return $this->hasMany(Candidate::class);
     }
 
-    protected static array $months = [
-        1 => 'Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni',
-        'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember',
-    ];
+    public function scheduleItems(): HasMany
+    {
+        return $this->hasMany(EventScheduleItem::class)->orderBy('tanggal')->orderBy('jam');
+    }
 
     public function dateLabel(): string
     {
-        return $this->date->day.' '.static::$months[(int) $this->date->format('n')].' '.$this->date->year;
+        return IndonesianDate::label($this->date);
     }
 
     public function daysLabel(): string

@@ -14,10 +14,17 @@ long-running processes required.
 - **Public site** — landing page listing upcoming ordinations, event detail
   page listing candidates, candidate profile page (schedule / biography /
   wishlist tabs) with a "I want to give this" flow for wishlist items.
+- **Shared vs. personal schedule** — the admin can add schedule items that
+  apply to every candidate in an event (e.g. the ordination Mass itself);
+  each candidate adds their own personal items on top of that. Both are
+  merged into one chronological timeline per candidate, and past items are
+  greyed out. Dates and times are entered with native pickers.
 - **Frater/Diakon dashboard** — each candidate logs in and manages their own
-  schedule items, biography, and wishlist.
-- **Admin dashboard** — create ordination events, create candidate accounts,
-  delete events/candidates, see who has claimed which wishlist item.
+  schedule items, a rich-text biography (with inline photo uploads), and
+  their wishlist.
+- **Admin dashboard** — create ordination events and their shared schedule,
+  create candidate accounts, delete events/candidates, see who has claimed
+  which wishlist item.
 - All data lives in a single SQLite file — nothing else to provision.
 
 ## Local development
@@ -106,14 +113,17 @@ $app = require_once __DIR__.'/../tahbisan-app/bootstrap/app.php';
 - The `database/database.sqlite` file must also be writable by the web
   server and must **not** be reachable over HTTP — it isn't, as long as it
   stays outside your document root as described above.
+- `public/uploads/` must be writable by the web server — it's where biography
+  photos get saved (served directly from `public/`, no `storage:link`
+  symlink needed, which keeps this a plain zip-and-extract deploy).
 
 ### Updating the site later
 
 Rebuild a new release zip and re-upload it, but **do not overwrite**
-`.env` or `database/database.sqlite` on the server — those hold your real
-configuration and data. Upload everything else (`app/`, `vendor/`,
-`public/`, `resources/`, `routes/`, etc.) over the old copy, keeping the
-live `.env` and `database/database.sqlite` in place.
+`.env`, `database/database.sqlite`, or `public/uploads/` on the server —
+those hold your real configuration, data, and uploaded photos. Upload
+everything else (`app/`, `vendor/`, `public/build/`, `resources/`,
+`routes/`, etc.) over the old copy, keeping those three in place.
 
 ## Admin password command
 

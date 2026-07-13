@@ -14,7 +14,7 @@ class DashboardController extends Controller
     {
         /** @var Candidate $candidate */
         $candidate = Auth::guard('frater')->user();
-        $candidate->load(['event', 'scheduleItems', 'wishlistItems.claims']);
+        $candidate->load(['event.scheduleItems', 'scheduleItems', 'wishlistItems.claims']);
 
         $tab = in_array($request->query('tab'), ['informasi', 'biography', 'wishlist'], true)
             ? $request->query('tab')
@@ -27,6 +27,7 @@ class DashboardController extends Controller
 
         return view('frater.dashboard', [
             'candidate' => $candidate,
+            'timeline' => $candidate->timeline(),
             'tab' => $tab,
             'editingItem' => $editingItem,
         ]);

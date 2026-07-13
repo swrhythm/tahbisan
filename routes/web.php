@@ -3,8 +3,10 @@
 use App\Http\Controllers\Admin\CandidateController;
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\EventScheduleItemController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Frater\BiographyController;
+use App\Http\Controllers\Frater\BiographyImageController;
 use App\Http\Controllers\Frater\DashboardController as FraterDashboardController;
 use App\Http\Controllers\Frater\ScheduleItemController;
 use App\Http\Controllers\Frater\WishlistItemController;
@@ -30,6 +32,7 @@ Route::middleware('auth:frater')->prefix('dashboard')->name('frater.')->group(fu
     Route::delete('/informasi/{scheduleItem}', [ScheduleItemController::class, 'destroy'])->name('informasi.destroy');
 
     Route::post('/biography', [BiographyController::class, 'update'])->name('biography.update');
+    Route::post('/biography/image', [BiographyImageController::class, 'store'])->name('biography.image');
 
     Route::post('/wishlist', [WishlistItemController::class, 'store'])->name('wishlist.store');
     Route::delete('/wishlist/{wishlistItem}', [WishlistItemController::class, 'destroy'])->name('wishlist.destroy');
@@ -43,4 +46,7 @@ Route::middleware('auth:admin')->prefix('admin')->name('admin.')->group(function
 
     Route::post('/candidates', [CandidateController::class, 'store'])->name('candidates.store');
     Route::delete('/candidates/{candidate}', [CandidateController::class, 'destroy'])->name('candidates.destroy');
+
+    Route::post('/schedule', [EventScheduleItemController::class, 'store'])->name('schedule.store');
+    Route::delete('/schedule/{eventScheduleItem}', [EventScheduleItemController::class, 'destroy'])->name('schedule.destroy');
 });

@@ -1,8 +1,9 @@
 @import 'tailwindcss';
 /* Vendored copy of quill/dist/quill.snow.css — some hosts' resolvers fail
-   on the deep node_modules subpath import from within a CSS @import. */
+   to resolve node_modules packages from inside a CSS @import/@plugin
+   (also why there's no @tailwindcss/typography plugin here — see
+   .biography-content below for its hand-written replacement). */
 @import './vendor/quill.snow.css';
-@plugin '@tailwindcss/typography';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -33,4 +34,55 @@ body {
 ::selection {
     background: var(--color-gold-light);
     color: var(--color-maroon-dark);
+}
+
+/* Biography rendering — matches the tag whitelist in App\Support\HtmlSanitizer. */
+.biography-content {
+    font-family: var(--font-serif);
+    font-size: 1.125rem;
+    line-height: 1.9;
+    color: #2b241f;
+}
+.biography-content p {
+    margin: 0 0 1.25em;
+}
+.biography-content p:last-child {
+    margin-bottom: 0;
+}
+.biography-content h2,
+.biography-content h3 {
+    font-weight: 600;
+    color: var(--color-maroon-dark);
+    margin: 1.5em 0 0.5em;
+}
+.biography-content h2 {
+    font-size: 1.5em;
+}
+.biography-content h3 {
+    font-size: 1.25em;
+}
+.biography-content blockquote {
+    border-left: 3px solid var(--color-gold-light);
+    padding-left: 1em;
+    margin: 1.25em 0;
+    font-style: italic;
+    color: var(--color-taupe);
+}
+.biography-content ul,
+.biography-content ol {
+    margin: 0 0 1.25em;
+    padding-left: 1.5em;
+}
+.biography-content li {
+    margin: 0.35em 0;
+}
+.biography-content a {
+    color: var(--color-maroon);
+    text-decoration: underline;
+}
+.biography-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.375rem;
+    margin: 1.25em 0;
 }

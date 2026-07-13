@@ -42,7 +42,7 @@
                 @endif
             @elseif ($tab === 'biography')
                 @if ($candidate->biography)
-                    <div class="prose prose-lg max-w-none font-serif text-[#2b241f] prose-headings:font-serif prose-headings:text-maroon-dark prose-a:text-maroon">{!! $candidate->biography !!}</div>
+                    <div class="biography-content">{!! $candidate->biography !!}</div>
                 @else
                     <div class="text-lg text-taupe">Biography belum tersedia.</div>
                 @endif

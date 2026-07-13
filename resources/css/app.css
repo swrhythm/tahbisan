@@ -1,5 +1,7 @@
 @import 'tailwindcss';
-@import 'quill/dist/quill.snow.css';
+/* Vendored copy of quill/dist/quill.snow.css — some hosts' resolvers fail
+   on the deep node_modules subpath import from within a CSS @import. */
+@import './vendor/quill.snow.css';
 @plugin '@tailwindcss/typography';
 
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
